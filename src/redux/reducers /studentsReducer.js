@@ -19,7 +19,7 @@ const studentsSlice = createSlice({
             })
             .addCase(getStudents.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.students = action.payload;
+                state.students = action.payload.records;
             })
             .addCase(getStudents.rejected, (state, action) => {
                 state.isLoading = false;

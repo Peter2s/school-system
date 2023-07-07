@@ -2,16 +2,19 @@ import {useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import {getStudents} from '../redux/actions/studentsAction'
 
-import {Table} from "react-bootstrap";
+import {Spinner, Table} from "react-bootstrap";
 
-export const StudentsTable = () => {
+export const StudentsTable = ({data}) => {
 	const dispatch = useDispatch();
-	const students = useSelector(state => state.students);
+	const students = useSelector(state => state.students.students);
 	useEffect(() => {
 		dispatch( getStudents() );
-	}, [dispatch]);
+	}, []);
+	useEffect(() => {
+		console.log(students)
+	}, [students]);
 	return (
-				<Table striped bordered hover>
+				students ? <Table striped bordered hover>
 					<thead>
 					<tr>
 						<th>First Name</th>
@@ -32,6 +35,6 @@ export const StudentsTable = () => {
 						</tr>
 					))}
 					</tbody>
-				</Table>
+				</Table> : <Spinner className="m-4" size="xl" />
 	)
 }
