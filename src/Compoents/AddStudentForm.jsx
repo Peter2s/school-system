@@ -1,108 +1,110 @@
-import React from 'react';
-import { Form, Button } from 'react-bootstrap';
-import { Formik, Field, ErrorMessage, FieldArray } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
+import React, { useState } from 'react';
+import {Form, Button, Container, Row, Col, FormControl} from 'react-bootstrap';
+import { Formik, Field, FieldArray, ErrorMessage } from 'formik';
+import * as Yup from 'yup'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 const AddStudentForm = () => {
-	const initialValues = {
-		students: [
-			{
-				firstName: '',
-				lastName: '',
-				photo: null,
-				note: ''
-			}
-		]
-	};
-
-	const validationSchema = Yup.object({
+	const validationSchema = Yup.object().shape({
 		students: Yup.array().of(
 			Yup.object().shape({
-				firstName: Yup.string().required('First Name is required'),
-				lastName: Yup.string().required('Last Name is required'),
-				photo: Yup.mixed().required('Photo is required'),
-				note: Yup.string().required('Note is required')
+				firstName: Yup.string().required('First Name is required').min(2, 'First Name must be at least 2 characters'),
+				lastName: Yup.string().required('Last Name is required').min(2, 'Last Name must be at least 2 characters'),
+				notes: Yup.string().required('Notes is required').min(2, 'Notes must be at least 2 characters'),
+				image: Yup.mixed().required('Image is required')
 			})
 		)
 	});
 
-	const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-		try {
-			// Send a POST request to the backend API to add the students
-			await axios.post('/api/students', values.students); // Replace with your API endpoint
+		const handleSubmit = (values) => {
+			const formData = new FormData();
 
-			// Reset the form after successful submission
-			resetForm();
-		} catch (error) {
-			console.error('Error adding students:', error);
-		} finally {
-			setSubmitting(false);
-		}
-	};
+			values.students?.forEach((student, index) => {
+				formData.set(`students[${index}].firstName`, student.firstName);
+				formData.set(`students[${index}].lastName`, student.lastName);
+				formData.set(`students[${index}].notes`, student.notes);
+				formData.set(`students[${index}].image`, student.image);
+			});
+			console.log(formData);
+		};
 
-	return (
-		<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-			{({ isSubmitting , values }) => (
-				<Form>
-					<FieldArray name="students">
-						{({ push, remove }) => (
-							<div>
-								{values.students.map((student, index) => (
-									<div key={index}>
-										<Form.Group controlId={`students[${index}].firstName`}>
-											<Form.Label>First Name</Form.Label>
-											<Field name={`students[${index}].firstName`} as={Form.Control} />
-											<ErrorMessage name={`students[${index}].firstName`} component="div" className="text-danger" />
-										</Form.Group>
+		return (
+				<Formik initialValues={{ students: [{ firstName: '', lastName: '', notes: '', image: '' }] }} validationSchema={validationSchema} onSubmit={handleSubmit}>
+					{({ handleSubmit, isSubmitting,values }) => (
+						<Form onSubmit={handleSubmit}>
+							<Container>
+							<FieldArray name="students">
+								{({ push, remove }) => (
+									<div>
+										<h3>Add Students</h3>
 
-										<Form.Group controlId={`students[${index}].lastName`}>
-											<Form.Label>Last Name</Form.Label>
-											<Field name={`students[${index}].lastName`} as={Form.Control} />
-											<ErrorMessage name={`students[${index}].lastName`} component="div" className="text-danger" />
-										</Form.Group>
+										{values.students.map((_, index) => (
+											<div key={index} className="border border-2 mt-2 p-3">
+												<Row>
+													<Col xs="6">
+												<Form.Group controlId={`students.${index}.firstName`}>
+													<Form.Label>First Name</Form.Label>
+													<Field name={`students.${index}.firstName`} type="text" as={Form.Control} />
+													<ErrorMessage name={`students.${index}.firstName`} component="div" className="text-danger" />
+												</Form.Group>
 
-										<Form.Group controlId={`students[${index}].photo`}>
-											<Form.Label>Student Photo</Form.Label>
-											<Field name={`students[${index}].lastName`} type='file' as={Form.Control} />
-											{/*<Field name={`students[${index}].photo`}>*/}
-											{/*	{({ field, form }) => (*/}
-											{/*			<Form.File*/}
-											{/*				{...field}*/}
-											{/*				onChange={(event) => form.setFieldValue(`students[${index}].photo`, event.currentTarget.files[0])}*/}
-											{/*				isInvalid={form.errors.students && form.errors.students[index] && form.errors.students[index].photo}*/}
-											{/*			/>*/}
-											{/*	)}*/}
-											{/*</Field>*/}
-											<ErrorMessage name={`students[${index}].photo`} component="div" className="text-danger" />
-										</Form.Group>
+												<Form.Group controlId={`students.${index}.lastName`}>
+													<Form.Label>Last Name</Form.Label>
+													<Field name={`students.${index}.lastName`} type="text" as={Form.Control} />
+													<ErrorMessage name={`students.${index}.lastName`} component="div" className="text-danger" />
+												</Form.Group>
+													</Col>
+													<Col xs="5">
+												<Form.Group controlId={`students.${index}.notes`}>
+													<Form.Label>Notes</Form.Label>
+													<Field name={`students.${index}.notes`} type="text" as={Form.Control} />
+													<ErrorMessage name={`students.${index}.notes`} component="div" className="text-danger" />
+												</Form.Group>
 
-										<Form.Group controlId={`students[${index}].note`}>
-											<Form.Label>Note</Form.Label>
-											<Field name={`students[${index}].note`} as={Form.Control} />
-											<ErrorMessage name={`students[${index}].note`} component="div" className="text-danger" />
-										</Form.Group>
+												<Form.Group controlId={`students.${index}.image`}>
+													<Form.Label>Image</Form.Label>
+													<Field name={`students.${index}.image`}>
+														{({ field, form }) => (
+																// <FormControl
+																// 	type="file"
+																// 	{...field}
+																// 	onChange={(event) => form.setFieldValue(`students.${index}.image`, event.currentTarget.files[0])}
+																// />
+															<Field name={`students.${index}.image`} type="file" as={Form.Control} />
 
-										<Button variant="danger" onClick={() => remove(index)} className="mb-3">
-											Remove Student
+														)}
+													</Field>
+													<ErrorMessage name={`students.${index}.image`} component="div" className="text-danger" />
+												</Form.Group>
+														</Col>
+													<Col xs="1">
+															{index > 0 && (
+																<Button variant="danger" onClick={() => remove(index)} className="mb-3">
+																	<FontAwesomeIcon icon={faTrash} />
+																</Button>
+															)}
+														</Col>
+												</Row>
+											</div>
+										))}
+
+										<Button variant="primary" onClick={() => push({ firstName: '', lastName: '', notes: '', image: null })} className="my-3">
+											<FontAwesomeIcon icon={faPlus} /> Add Student
 										</Button>
 									</div>
-								))}
-
-								<Button variant="primary" onClick={() => push(initialValues.students[0])}  className="mb-3">
-									Add Student
-									</Button>
-									</div>
-									)}
+								)}
 							</FieldArray>
 
-							<Button variant="primary" type="submit" disabled={isSubmitting}>
-						Add Students
-					</Button>
-				</Form>
-			)}
-		</Formik>
-	);
-};
+							<Button variant="primary" type="submit" >
+								Submit
+							</Button>
+							</Container>
+						</Form>
+					)}
+				</Formik>
+		);
+	};
+export  default  AddStudentForm
 
-export default AddStudentForm;

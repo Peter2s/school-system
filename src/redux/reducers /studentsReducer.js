@@ -19,7 +19,7 @@ const studentsSlice = createSlice({
             })
             .addCase(getStudents.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.user = action.payload;
+                state.students = action.payload;
             })
             .addCase(getStudents.rejected, (state, action) => {
                 state.isLoading = false;
@@ -30,14 +30,11 @@ const studentsSlice = createSlice({
                 state.error = null;
             }).addCase(addStudents.fulfilled, (state,action) => {
             state.isLoading = false;
-            state.user = action.payload;
+            state.students = action.payload;
         }).addCase(addStudents.rejected, (state,action) => {
             state.isLoading = false;
             state.error =  action.error.message;
         })
-
-
-
     }
 });
 

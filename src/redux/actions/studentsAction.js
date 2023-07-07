@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
-export const getStudents = createAsyncThunk(`users/register`, async (userData) => {
+export const getStudents = createAsyncThunk(`students/get`, async (userData) => {
     try {
         const response = await axios.get('/students');
         console.log(response.data.user);
@@ -11,7 +11,7 @@ export const getStudents = createAsyncThunk(`users/register`, async (userData) =
         throw new Error('get error');
     }
 });
-export const addStudents = createAsyncThunk(`users/register`, async (userData) => {
+export const addStudents = createAsyncThunk(`students/create`, async (userData) => {
     try {
         const response = await axios.post('/students', userData);
         console.log(response.data.user);
