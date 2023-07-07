@@ -6,9 +6,9 @@ export const AddStudentsPage = () => {
 	return (
 		<>
 			<Container>
-				<div className="d-flex justify-content-between align-content-center">
+				<div className="d-flex justify-content-between align-items-center my-2">
 					<h3 className="h3 d-inline-block">Add Students</h3>
-					<Button className="btn btn-primary mt-5">
+					<Button className="btn btn-primary">
 						<Link to="/" className="text-light "  style={{textDecoration:'none',cursor:'pointer'}} >Show All Students </Link>
 					</Button>
 				</div>
