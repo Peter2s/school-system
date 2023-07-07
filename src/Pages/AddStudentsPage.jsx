@@ -1,9 +1,19 @@
-import AddStudentForm from "../Compoents/AddStudentForm";
-
+import AddStudentForm from "../Compoents/AddStudentForm/AddStudentForm";
+import React from "react";
+import {Link} from "react-router-dom";
+import {Button, Container} from "react-bootstrap";
 export const AddStudentsPage = () => {
 	return (
 		<>
-			<AddStudentForm/>
+			<Container>
+				<div className="d-flex justify-content-between align-content-center">
+					<h3 className="h3 d-inline-block">Add Students</h3>
+					<Button className="btn btn-primary mt-5">
+						<Link to="/" className="text-light "  style={{textDecoration:'none',cursor:'pointer'}} >Show All Students </Link>
+					</Button>
+				</div>
+				<AddStudentForm/>
+			</Container>
 		</>
 	)
 }

@@ -1,13 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {getStudents,addStudents} from '../actions/studentsAction'
-
 const initialState = {
     students: null,
     totalPages:null,
     isLoading: false,
     error: null
 };
-
 const studentsSlice = createSlice({
     name: 'students',
     initialState,
@@ -39,6 +37,4 @@ const studentsSlice = createSlice({
         })
     }
 });
-
-
 export default studentsSlice.reducer;

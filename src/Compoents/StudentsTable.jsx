@@ -7,17 +7,9 @@ import Pagination from "@mui/material/Pagination";
 
 export const StudentsTable = ({data}) => {
 	const [page, setPage] = useState(1);
-
 	const dispatch = useDispatch();
 	const students = useSelector(state => state.students.students);
 	const totalPages = useSelector(state => state.students.totalPages);
-	useEffect(() => {
-		dispatch( getStudents(1) );
-	}, []);
-	useEffect(() => {
-		console.log(students)
-	}, [students]);
-
 	useEffect(() => { dispatch(getStudents(page)) }
 		,[page])
 	const onPageChange = (event, value) => {
