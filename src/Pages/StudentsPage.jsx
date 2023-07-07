@@ -4,8 +4,11 @@ import {useState} from "react";
 import axiosInstance from "../api/axiosInstance";
 import Swal from "sweetalert2";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
 export const StudentsPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
+	const students = useSelector(state => state.students.students);
+
 	const exportExecl = async () => {
 		setIsLoading(true);
 		axiosInstance.get("students/generateExcel",{
@@ -44,7 +47,7 @@ export const StudentsPage = () => {
 				</Button>
 			</div>
 			{!isLoading ?
-				<>
+				( students.length > 0 ?<>
 				<Row>
 					<Button variant="primary" className="my-4 " onClick={exportExecl}> Export as excel sheet </Button>
 				</Row>
@@ -53,7 +56,7 @@ export const StudentsPage = () => {
 						<StudentsTable/>
 					</Col>
 				</Row>
-				</>: <Spinner className="my-4" />}
+				</> : <h1> Not students Found </h1>): <Spinner className="my-4" />}
 			</Container>
 		</>
 	)
