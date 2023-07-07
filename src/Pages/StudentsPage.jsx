@@ -1,14 +1,18 @@
 import {StudentsTable} from "../Compoents/StudentsTable";
-import {Button, Col, Container, Row} from "react-bootstrap";
+import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getStudents} from "../redux/actions/studentsAction"
 import axiosInstance from "../api/axiosInstance";
+import Swal from "sweetalert2";
 
 export const StudentsPage = () => {
+	const [isLoading, setIsLoading] = useState(false);
+
 
 	const exportExecl = async () => {
-		const res =  axiosInstance.get("students/generateExcel",{
+		setIsLoading(true);
+		axiosInstance.get("students/generateExcel",{
 			responseType: 'blob'
 		})
 		 .then(response => {
@@ -18,14 +22,24 @@ export const StudentsPage = () => {
 			link.setAttribute('download', 'students.xlsx');
 			document.body.appendChild(link);
 			link.click();
+			 setIsLoading(false);
 		})
 			.catch(error => {
+				setIsLoading(false);
+				Swal.fire({
+					position: 'top-end',
+					icon: 'error',
+					title: 'Oops! Something went wrong',
+					text: error.message,
+					showConfirmButton: false,
+					timer: 3000
+				})
 
 			});
 	}
 	return (
 		<>
-			<Container>
+			{!isLoading ? <Container>
 				<Row>
 					<Button variant="primary" className="my-4 " onClick={exportExecl}> Export as Excl </Button>
 				</Row>
@@ -34,7 +48,7 @@ export const StudentsPage = () => {
 						<StudentsTable/>
 					</Col>
 				</Row>
-			</Container>
+			</Container> : <Spinner className="my-4" />}
 
 		</>
 	)

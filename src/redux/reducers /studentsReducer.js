@@ -3,6 +3,7 @@ import {getStudents,addStudents} from '../actions/studentsAction'
 
 const initialState = {
     students: null,
+    totalPages:null,
     isLoading: false,
     error: null
 };
@@ -20,6 +21,7 @@ const studentsSlice = createSlice({
             .addCase(getStudents.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.students = action.payload.records;
+                state.totalPages = action.payload.totalPages;
             })
             .addCase(getStudents.rejected, (state, action) => {
                 state.isLoading = false;

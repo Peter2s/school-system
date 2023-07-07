@@ -1,9 +1,9 @@
 import axiosInstance from '../../api/axiosInstance';
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
-export const getStudents = createAsyncThunk(`students/get`, async (userData) => {
+export const getStudents = createAsyncThunk(`students/get`, async (page) => {
     try {
-        const response = await axiosInstance.get('/students');
+        const response = await axiosInstance.get(`/students?page=${page || 1}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
