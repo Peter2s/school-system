@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getStudents} from '../redux/actions/studentsAction'
 import {Spinner, Table} from "react-bootstrap";
 import Pagination from "@mui/material/Pagination";
@@ -23,6 +23,10 @@ export const StudentsTable = ({data}) => {
 	const onPageChange = (event, value) => {
 		setPage(value);
 	};
+	const imgeUrl = (img)=>{
+		console.log()
+		return `https://localhost:7247/resource/${img.split('/')[1]}`;
+	};
 	return (
 				students ? <Table striped bordered hover>
 					<thead>
@@ -39,7 +43,7 @@ export const StudentsTable = ({data}) => {
 							<td>{student.firstName}</td>
 							<td>{student.lastName}</td>
 							<td>
-								<img src={student.photo} alt="Student" width="100" height="100" />
+								<img src={imgeUrl(student.studentPhoto)} alt={student.firstName} style={{maxWidth:50}} />
 							</td>
 							<td>{student.note}</td>
 						</tr>

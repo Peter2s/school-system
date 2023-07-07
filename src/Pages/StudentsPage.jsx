@@ -1,10 +1,9 @@
 import {StudentsTable} from "../Compoents/StudentsTable";
 import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
-import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {getStudents} from "../redux/actions/studentsAction"
+import {useState} from "react";
 import axiosInstance from "../api/axiosInstance";
 import Swal from "sweetalert2";
+import {Link} from "react-router-dom";
 
 export const StudentsPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +38,12 @@ export const StudentsPage = () => {
 	}
 	return (
 		<>
-			{!isLoading ? <Container>
+			<Container>
+			<div className="d-flex justify-content-start">
+				<Link to="/students/create" className="text-success fs-4 "  style={{textDecoration:'none',cursor:'pointer'}} >Add new Students </Link>
+			</div>
+			{!isLoading ?
+				<>
 				<Row>
 					<Button variant="primary" className="my-4 " onClick={exportExecl}> Export as Excl </Button>
 				</Row>
@@ -48,7 +52,8 @@ export const StudentsPage = () => {
 						<StudentsTable/>
 					</Col>
 				</Row>
-			</Container> : <Spinner className="my-4" />}
+				</>: <Spinner className="my-4" />}
+			</Container>
 
 		</>
 	)
